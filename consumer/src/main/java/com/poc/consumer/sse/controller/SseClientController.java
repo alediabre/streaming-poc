@@ -32,17 +32,20 @@ public class SseClientController {
         Flux<String> flux = sseClientService.getServerSentEvents();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            flux.doOnNext(data -> {
-                        try {
-                            emitter.send(SseEmitter.event().data(data));
-                        } catch (IOException e) {
-                            emitter.completeWithError(e);
+        executor.execute(() ->
+                flux.doOnNext(data -> {
+                    try {
+                        StringBuilder sb = new StringBuilder(data);
+                        if (data.startsWith(" ")){
+                            sb.insert(0, " ");
                         }
-                    }).doOnComplete(emitter::complete)
-                    .doOnError(emitter::completeWithError)
-                    .subscribe();
-        });
+                        emitter.send(SseEmitter.event().data(sb.toString()));
+                    } catch (IOException e) {
+                        emitter.completeWithError(e);
+                    }
+                }).doOnComplete(emitter::complete)
+                .doOnError(emitter::completeWithError)
+                .subscribe());
 
         return emitter;
     }
