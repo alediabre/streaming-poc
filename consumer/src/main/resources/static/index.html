@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>SSE Example</title>
+    </head>
+    <body>
+        <h1>Server-Sent Events Example</h1>
+        <div id="messages"></div>
+        <script>
+            const eventSource = new EventSource('/consumer/receive');
+            eventSource.onmessage = function(event) {
+                const messagesDiv = document.getElementById('messages');
+                const message = document.createElement('div');
+                message.textContent = event.data;
+                messagesDiv.appendChild(message);
+                if (event.data === '<|endoftext|>') {
+                    eventSource.close();
+                }
+            };
+        </script>
+    </body>
+</html>

@@ -21,7 +21,7 @@ public class ProducerApplicationInitializer implements ServletContextInitializer
         logger.info("INITIALIZING MY DISPATCHER");
 
         AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
-        webApplicationContext.register(AppConfig.class);
+        webApplicationContext.register(ProducerConfig.class);
 
 
         // Creating a dispatcher servlet object
